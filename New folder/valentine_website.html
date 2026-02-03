@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Will You Be My Valentine? 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Comic Sans MS', 'Comic Neue', cursive;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem 3rem;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ff4d6d;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      position: relative;
+      height: 80px;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      position: absolute;
+      transition: transform 0.2s ease;
+    }
+
+    #yes {
+      background: #ff4d6d;
+      color: white;
+      left: 20%;
+    }
+
+    #yes:hover {
+      transform: scale(1.1);
+    }
+
+    #no {
+      background: #ccc;
+      color: #333;
+      left: 60%;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: absolute;
+      bottom: -20px;
+      color: rgba(255, 77, 109, 0.8);
+      font-size: 20px;
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-120vh) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .success {
+      font-size: 2rem;
+      color: #ff4d6d;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cute music -->
+  <audio id="music" loop>
+    <source src="falak-song.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="card" id="card">
+    <div id="music-hint" style="font-size:0.9rem; opacity:0.7; margin-bottom:8px;">🔊 Tap for music</div>
+    <h1>Falak, will you be my Valentine? 💘</h1>
+    <p>Falak, you make my world brighter every single day ✨</p>
+    <div class="buttons">
+      <button id="yes">Yes 💖</button>
+      <button id="no">No 🙈</button>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('no');
+    const music = document.getElementById('music');
+    const musicHint = document.getElementById('music-hint');
+
+    document.body.addEventListener('click', () => {
+      if (music.paused) {
+        music.play().catch(() => {});
+        if (musicHint) musicHint.style.display = 'none';
+      }
+    }, { once: true });
+    const yesBtn = document.getElementById('yes');
+    const card = document.getElementById('card');
+
+    // Dodge the cursor when it gets close
+    document.addEventListener('mousemove', (e) => {
+      const rect = noBtn.getBoundingClientRect();
+      const distance = Math.hypot(
+        e.clientX - (rect.left + rect.width / 2),
+        e.clientY - (rect.top + rect.height / 2)
+      );
+
+      if (distance < 120) {
+        moveNoButton();
+      }
+    });
+    noBtn.addEventListener('click', moveNoButton);
+
+    function moveNoButton() {
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.left = x + 'px';
+      noBtn.style.top = y + 'px';
+    }
+
+    yesBtn.addEventListener('click', () => {
+      music.play().catch(() => {});
+      card.innerHTML = `
+        <div class="success">
+          YAY!!! 💕🥰<br><br>
+          Baby, you just made me the happiest person ever 💖<br>
+          I can’t wait to make so many more memories with you ✨<br><br>
+          I love you 🌹
+        </div>
+      `;
+    });
+
+    /* Floating hearts generator */
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerHTML = '❤';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (3 + Math.random() * 4) + 's';
+      heart.style.fontSize = (16 + Math.random() * 24) + 'px';
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 7000);
+    }
+
+    setInterval(createHeart, 300);
+  </script>
+</body>
+</html>
